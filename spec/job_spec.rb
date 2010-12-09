@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + "/../../spec_helper"
-require 'dispatch'
+require "spec_helper"
 
 if MACOSX_VERSION >= 10.6
   describe "Dispatch::Job" do

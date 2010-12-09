@@ -12,6 +12,9 @@
 # This library provides higher-level services and convenience methods
 # to make it easier for traditional Ruby programmers to add multicore support.
 
+libdir = File.expand_path(File.dirname(__FILE__))
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
+
 require 'dispatch/source'
 require 'dispatch/queue'
 require 'dispatch/proxy'
