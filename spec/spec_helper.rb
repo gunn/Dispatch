@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "../lib/dispatch")
+require File.expand_path('../../lib/dispatch', __FILE__)
 
 framework 'Cocoa'
 
