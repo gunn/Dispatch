@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.description = %q{Grand Central Dispatch is natively implemented as a C API and runtime engine. This gem provides a MacRuby wrapper around that API and allows Ruby to very easily take advantage of GCD to run tasks in parrallel and do calculations asynchronously with queues automatically mapping to threads as needed.}
 
   s.rubyforge_project = "dispatch"
+  
+  s.add_development_dependency "mspec", "~>1.5.0"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
