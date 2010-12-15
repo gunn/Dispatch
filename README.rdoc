@@ -668,3 +668,8 @@ At the moment, this is best done by reading the {existing C documentation for GC
 	$ macri Dispatch::Semaphore
 		
 However, feel free to {file bugs}[https://www.macruby.org/auth/login/?next=/trac/newticket] about additional documentation you would like to see.
+
+= Development
+
+Gemified by {Arthur Gunn}[mailto:arthur@gunn.co.nz].
+To contribute - please fork, commit, pull request, bonus points for tests. Have a play and report bugs, request features via the issue tracker.
