@@ -1,6 +1,6 @@
 #!/usr/local/bin/macruby
 
-require 'dispatch'	
+require 'dispatch'
 job = Dispatch::Job.new { Math.sqrt(10**100) }
 @result = job.value
 puts "value (sync): #{@result} => 1.0e+50"
@@ -101,7 +101,7 @@ puts q = Dispatch::Queue.new("org.macruby.queue.example")
 q.sync { puts "queue sync" }
 
 q.async { puts "queue async" }
-	
+
 puts "queue join"
 q.join
 puts
@@ -267,11 +267,11 @@ writer = Dispatch::Source.write(file) do |s|
 	if @next_char < @msg.size then
 		char = @msg[@next_char]
 		file.write(char)
-		@next_char += 1	
+		@next_char += 1
 		puts "Dispatch::Source.write: #{char}|#{@msg[@next_char..-1]}"
 	end
 end
 while (@next_char < @msg.size) do; end
 puts "output: #{File.read(filename)} => #{@msg}" # e.g., 74323-2010-07-07_15:23:10_-0700
 File.delete(filename)
-	
+

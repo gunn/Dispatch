@@ -2,7 +2,7 @@ require File.expand_path('../spec_helper', __FILE__)
 
 if MACOSX_VERSION >= 10.6
   describe "parallel loop" do
-    
+
     describe :Integer do
       describe :p_times do
         before :each do
@@ -139,7 +139,7 @@ if MACOSX_VERSION >= 10.6
 
         it "should accumulate any object that takes :+ " do
           map1 = @ary.map {|v| "%x" % (10+v)}
-          map2 = @ary.p_mapreduce("") {|v| "%x" % (10+v)}   
+          map2 = @ary.p_mapreduce("") {|v| "%x" % (10+v)}
           map1.each do |s|
             map2.index(s).should_not == nil
           end
@@ -148,7 +148,7 @@ if MACOSX_VERSION >= 10.6
         it "should allow custom accumulator methods" do
           map1 = @ary.map {|v| v**2}
           sum1 = map1.inject(0) {|s,v| s | v}
-          sum2 = @ary.p_mapreduce(0, :|) {|v| v**2}   
+          sum2 = @ary.p_mapreduce(0, :|) {|v| v**2}
           sum2.should == sum1
         end
       end
@@ -156,7 +156,7 @@ if MACOSX_VERSION >= 10.6
       describe :p_find_all do
         it "exists on objects that support Enumerable" do
           @ary.respond_to?(:p_find_all).should == true
-        end  
+        end
 
         it "should behave like find_all" do
           found1 = @ary.find_all {|v| v.odd?}
@@ -168,7 +168,7 @@ if MACOSX_VERSION >= 10.6
       describe :p_find do
         it "exists on objects that support Enumerable" do
           @ary.respond_to?(:p_find).should == true
-        end  
+        end
 
         it "returns nil if nothing found" do
           found2 = @ary.p_find {|v| false}

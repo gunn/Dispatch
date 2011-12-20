@@ -21,7 +21,7 @@ class Node
         @successor = successor
         @current = 0
     end
-            
+
     def call(m)
         @queue.async(@group) do
             case m
@@ -29,14 +29,14 @@ class Node
                 return
             when @current
                 call(m-1)
-            else 
+            else
                 puts "\t#{self}.call(#{m})" if DEBUG
                 @current = m
                 @successor.call(m)
             end
         end
     end
-    
+
     def to_s
         "##{@index}->#{@successor.index}[#{@current}]"
     end
@@ -48,7 +48,7 @@ class Ring
         @nodes = []
         setup(n)
     end
-    
+
     def setup(n)
         last = nil
         n.downto(1) do |i|
@@ -57,12 +57,12 @@ class Ring
         end
         @nodes[0].successor = last
     end
-    
+
     def call(m)
         @nodes[-1].call(m)
         @group.wait
     end
-    
+
     def to_s
         @nodes.reverse.join " | "
     end
@@ -74,7 +74,7 @@ def bench(n,m)
   }.format("%8.6r\n").gsub!(/\(|\)/, "")
 
   puts "#{n}, #{m}, #{tm}"
-  
+
 end
 
 START.upto N_NODES do |p|
@@ -91,5 +91,5 @@ START.upto N_NODES do |p|
     end
 end
 
-        
+
 

@@ -5,7 +5,7 @@ module Dispatch
 
     # Returns a mostly unique reverse-DNS-style label based on
     # the ancestor chain and ID of +obj+ plus the current time
-    # 
+    #
     #   Dispatch::Queue.labelize(Array.new)
     #   => enumerable.array.0x2000cc2c0.1265915278.97557
     #
@@ -25,7 +25,7 @@ module Dispatch
     def self.for(obj)
       new(labelize(obj))
     end
-    
+
     # Wait until pending blocks have completed
     def join
       sync {}

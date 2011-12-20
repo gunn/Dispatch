@@ -2,31 +2,31 @@
 
 module Dispatch
   class Source
-    
+
     @@events = {
       exit:PROC_EXIT,
       fork:PROC_FORK,
       exec:PROC_EXEC,
-      signal:PROC_SIGNAL, 
-      
+      signal:PROC_SIGNAL,
+
       delete:VNODE_DELETE,
-      write:VNODE_WRITE, 
-      extend:VNODE_EXTEND, 
-      attrib:VNODE_ATTRIB, 
-      link:VNODE_LINK, 
-      rename:VNODE_RENAME, 
+      write:VNODE_WRITE,
+      extend:VNODE_EXTEND,
+      attrib:VNODE_ATTRIB,
+      link:VNODE_LINK,
+      rename:VNODE_RENAME,
       revoke:VNODE_REVOKE
     }
-      
+
     class << self
-          
+
       def event2num(e)
         return 0 if e.nil?
         value = e.to_int rescue @@events[e.to_sym]
         raise ArgumentError, "No event type #{e.inspect}" if value.nil?
         value
       end
-    
+
       def events2mask(events)
         mask = events.collect { |e| event2num(e) }.reduce(:|)
       end

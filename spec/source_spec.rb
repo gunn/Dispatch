@@ -23,10 +23,10 @@ if MACOSX_VERSION >= 10.6
         Dispatch::Source.event2num(:rename).should == Dispatch::Source::VNODE_RENAME
       end
     end
-    
+
     describe :data2events do
       it "converts PROC bitfields to symbols" do
-        mask = Dispatch::Source::PROC_EXIT | Dispatch::Source::PROC_SIGNAL 
+        mask = Dispatch::Source::PROC_EXIT | Dispatch::Source::PROC_SIGNAL
         events = Dispatch::Source.data2events(mask)
         events.include?(:signal).should == true
         events.include?(:fork).should == false
@@ -39,7 +39,7 @@ if MACOSX_VERSION >= 10.6
         events.include?(:rename).should == false
       end
     end
-    
+
     describe "add" do
       it "fires with data on summed inputs" do
         @count = 0
@@ -49,7 +49,7 @@ if MACOSX_VERSION >= 10.6
         @q.sync {}
         @count.should == 42
       end
-    end    
+    end
 
     describe "or" do
       it "fires with data on ORed inputs" do
@@ -60,7 +60,7 @@ if MACOSX_VERSION >= 10.6
         @q.sync {}
         @count.should == 42
       end
-    end    
+    end
 
     describe "PROC" do
       before :each do
@@ -68,7 +68,7 @@ if MACOSX_VERSION >= 10.6
       end
 
       describe "process" do
-        
+
         it "fires with data on process event(s)" do
           @event = 0
           @events = []
@@ -82,9 +82,9 @@ if MACOSX_VERSION >= 10.6
           @q.sync {}
           @events.include?(:signal).should == true
         end
-      
+
         it "can use bitfields as well as arrays" do
-          mask = Dispatch::Source::PROC_EXIT | Dispatch::Source::PROC_SIGNAL 
+          mask = Dispatch::Source::PROC_EXIT | Dispatch::Source::PROC_SIGNAL
           @event = 0
           @src = Dispatch::Source.process($$, mask, @q) { |s| @event |= s.data }
           Signal.trap(@signal, "IGNORE")
@@ -107,8 +107,8 @@ if MACOSX_VERSION >= 10.6
           @count.should == 2
           @src.cancel!
         end
-      end  
-    end  
+      end
+    end
 
     describe "VNODE" do
       before :each do
@@ -135,7 +135,7 @@ if MACOSX_VERSION >= 10.6
           @q.sync { }
           @result.should == @msg
         end
-      end    
+      end
 
       describe "write" do
         it "fires with data on writable bytes" do
@@ -153,7 +153,7 @@ if MACOSX_VERSION >= 10.6
           @result.should == @msg
         end
       end
-      
+
       describe "file" do
         it "fires with data on file events" do
           write_flag = Dispatch::Source.event2num(:write)
@@ -171,7 +171,7 @@ if MACOSX_VERSION >= 10.6
           @fired.should == true
           (@mask & write_flag).should == write_flag
         end
-      end          
+      end
     end
 
     describe "periodic" do
@@ -186,5 +186,5 @@ if MACOSX_VERSION >= 10.6
       end
     end
   end
-  
+
 end

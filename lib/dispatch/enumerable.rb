@@ -17,7 +17,7 @@ class Integer
   # Applies the +&block+ +Integer+ number of times in parallel
   # -- passing in stride (default 1) iterations at a time --
   # on a concurrent queue of the given (optional) +priority+
-  # 
+  #
   #   @sum = 0
   #   10.p_times(3) { |j| @sum += j }
   #   p @sum # => 55
@@ -26,7 +26,7 @@ class Integer
     n_times = self.to_int
     q = Dispatch::Queue.concurrent(priority)
     return q.apply(n_times, &block) if stride == 1
-    
+
     n_strides = (n_times / stride).to_int
     block_from = Proc.new do |j0|
       lambda { |j| block.call(j0+j) }
@@ -66,7 +66,7 @@ module Enumerable
   # Accumulates from +initial+ via +op+ (default = '+')
   # Note: each object can only run one p_mapreduce at a time
   def p_mapreduce(initial, op=:+, stride=1, priority=nil, &block)
-    # Check first, since exceptions from a Dispatch block can act funky 
+    # Check first, since exceptions from a Dispatch block can act funky
     raise ArgumentError if not initial.respond_to? op
     @mapreduce_q ||= Dispatch::Queue.for(self)
     @mapreduce_q.sync do # in case called more than once at a time
@@ -95,7 +95,7 @@ module Enumerable
   # Note: each object can only run one p_find at a time
   def p_find(stride=1, priority=nil,  &block)
     @find_q ||= Dispatch::Queue.for(self)
-    @find_q.sync do 
+    @find_q.sync do
       @find_result = nil
       q = Dispatch::Queue.for(@find_result)
       self.p_each(stride, priority) do |obj|

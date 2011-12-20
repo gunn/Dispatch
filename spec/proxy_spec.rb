@@ -1,7 +1,7 @@
 require File.expand_path('../spec_helper', __FILE__)
 
 if MACOSX_VERSION >= 10.6
-  
+
   class Delegate
     def initialize(s); @s = s; end
     def current_queue; Dispatch::Queue.current; end
@@ -10,14 +10,14 @@ if MACOSX_VERSION >= 10.6
     def set_name(s); sleep 0.01; @s = s; end
     def to_s; @s.to_s; end
   end
-  
+
   describe "Dispatch::Proxy" do
     before :each do
       @delegate_name = "my_delegate"
       @delegate = Delegate.new(@delegate_name)
       @proxy = Dispatch::Proxy.new(@delegate)
     end
-    
+
     describe :new do
       it "returns a Dispatch::Proxy" do
         @proxy.should be_kind_of Dispatch::Proxy
@@ -61,14 +61,14 @@ if MACOSX_VERSION >= 10.6
         retval = @proxy.get_number
         retval.should == 42
       end
-    
+
       it "should otherwise return Asynchronous to block, if given" do
         @value = 0
         retval = @proxy.get_number { |v| @value = v }
-        @value.should == 0      
+        @value.should == 0
         retval.should == nil
         @proxy.__group__.wait
-        @value.should == 42      
+        @value.should == 42
       end
     end
 
@@ -81,7 +81,7 @@ if MACOSX_VERSION >= 10.6
         d.to_s.should == new_name
       end
     end
-    
+
     describe "state" do
       it "should persist for collection objects" do
         actor = Dispatch::Proxy.new([])
@@ -89,10 +89,10 @@ if MACOSX_VERSION >= 10.6
         actor << :foo
         actor.size.should == 1
         actor[42] = :foo
-        actor.size.should == 43        
+        actor.size.should == 43
         actor.should be_kind_of Dispatch::Proxy
       end
-      
+
       it "should NOT persist under assignment" do
         actor = Dispatch::Proxy.new(0)
         actor.should be_kind_of Dispatch::Proxy
@@ -101,5 +101,5 @@ if MACOSX_VERSION >= 10.6
       end
     end
 
-  end  
+  end
 end

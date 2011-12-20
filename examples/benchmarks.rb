@@ -52,7 +52,7 @@ end
 
 def serial(n)
   n.times {|i| $queue.async {work_function(i)}}
-  $queue.sync { } 
+  $queue.sync { }
 end
 
 def nqueue(n)
