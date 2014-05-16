@@ -2,13 +2,13 @@ require 'delegate'
 
 module Dispatch
   # Serialize or asynchronize access to a delegate object.
-  # Forwards method invocations to the passed object via a private serial queue, 
+  # Forwards method invocations to the passed object via a private serial queue,
   # and can call back asynchronously if given a block
   #
   class Proxy < SimpleDelegator
-    
+
     attr_accessor :__group__, :__queue__, :__sync__
-    
+
     # Create Proxy to wrap the given +delegate+,
     # optionally specify +group+ and +queue+ for asynchronous callbacks
     def initialize(delegate, group=Group.new, queue=Dispatch::Queue.concurrent)
@@ -38,12 +38,12 @@ module Dispatch
     def __wait__
       @__serial__.sync { }
     end
-    
+
     # Return the +delegate+ object after waiting
     def __value__
       __wait__
       __getobj__
     end
-    
+
   end
 end

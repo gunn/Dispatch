@@ -2,7 +2,7 @@ require File.expand_path('../spec_helper', __FILE__)
 
 if MACOSX_VERSION >= 10.6
   describe "Dispatch::Job" do
-    
+
     before :each do
       @result = 0
       @job = Dispatch::Job.new
@@ -24,7 +24,7 @@ if MACOSX_VERSION >= 10.6
         job.value.to_s.should == q.to_s
       end
     end
-    
+
     describe :group do
       it "should return an instance of Dispatch::Group" do
         @job.group.should be_kind_of Dispatch::Group
@@ -50,7 +50,7 @@ if MACOSX_VERSION >= 10.6
         @value.should == 42
       end
     end
-    
+
     describe :join do
       it "should wait when called Synchronously" do
         @value = 0

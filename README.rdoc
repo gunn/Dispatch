@@ -5,7 +5,7 @@
 This article explains how to use Grand Central Dispatch (*GCD*) from MacRuby, and is adapted from {Introducing Blocks and Grand Central Dispatch}[http://developer.apple.com/mac/articles/cocoa/introblocksgcd.html] at the {Apple Developer Connection}[http://developer.apple.com/].
 
 === About GCD
-	
+
 GCD is a revolutionary approach to multicore computing that is woven throughout the fabric of {Mac OS X}[http://www.apple.com/macosx/] version 10.6 Snow Leopard. GCD combines an easy-to-use programming model with highly-efficient system services to radically simplify the code needed to make best use of multiple processors. The technologies in GCD improve the performance, efficiency, and responsiveness of Snow Leopard out of the box, and will deliver even greater benefits as more developers adopt them.
 
 The central insight of GCD is shifting the responsibility for managing threads and their execution from applications to the operating system. As a result, programmers can write less code to deal with concurrent operations in their applications, and the system can perform more efficiently on single-processor machines, large multiprocessor servers, and everything in between. Without a pervasive approach such as GCD, even the best-written application cannot deliver optimal performance, because it doesn't have full insight into everything else happening in the system.
@@ -28,7 +28,7 @@ Dispatch::Semaphore:: Synchronizes threads via a combination of waiting and sign
 The examples all assume you run the latest macirb and require the +dispatch+ library:
 
 	$ macirb
-	require 'dispatch'	
+	require 'dispatch'
 
 We also assume that you are already familiar with Ruby, though not necessarily MacRuby. No prior knowledge of C or GCD is assumed or required, but the {dispatch(3) man page}[http://developer.apple.com/mac/library/DOCUMENTATION/Darwin/Reference/ManPages/man3/dispatch.3.html] may be helpful if you wish to better understand the underlying semantics.
 
@@ -48,7 +48,7 @@ The downside of asynchrony is that you don't know exactly when your job will exe
 
 	@result = job.value
 	puts "value (sync): #{@result} => 1.0e+50"
-	
+
 This will wait until the value has been calculated, allowing it to be used as an {explicit Future}[http://en.wikipedia.org/wiki/Futures_and_promises]. However, this may stall the main thread indefinitely, which reduces the benefits of concurrency.
 
 Wherever possible, you should instead attempt to figure out exactly _when_  and _why_ you need to know the result of asynchronous work. Then, call +value+ with a block to also perform _that_ work asynchronously once the value has been calculated -- all without blocking the main thread:
@@ -61,7 +61,7 @@ If you just want to track completion, you can call +join[http://ruby-doc.org/cor
 
 	job.join
 	puts "join done (sync)"
-	
+
 Similarly, call +join+ with a block to run asynchronously once the work has been completed
 
 	job.join { puts "join done (async)" }
@@ -107,11 +107,11 @@ then ask it to wrap the object you want to modify from multiple threads:
 
 	@hash = job.synchronize Hash.new
 	puts "synchronize: #{@hash.class} => Dispatch::Proxy"
-	
+
 This is actually the same type of object used to manage the list of +values+:
 
 	puts "values: #{job.values.class} => Dispatch::Proxy"
-	
+
 === Proxy#method_missing: Using Proxies
 
 The Proxy object can be called just as it if were the delegate object:
@@ -119,9 +119,9 @@ The Proxy object can be called just as it if were the delegate object:
 	@hash[:foo] = :bar
 	puts "proxy: #{@hash} => {:foo=>:bar}"
 	@hash.delete :foo
-	
+
 Except that you can use it safely inside Dispatch blocks from multiple threads:
-	
+
 	[64, 100].each do |n|
 		job.add { @hash[n] = Math.sqrt(10**n) }
 	end
@@ -129,7 +129,7 @@ Except that you can use it safely inside Dispatch blocks from multiple threads:
 	puts "proxy: #{@hash} => {64 => 1.0E32, 100 => 1.0E50}"
 
 In this case, each block will perform the +sqrt+ asynchronously on the concurrent queue, potentially on multiple threads
-	
+
 As with Dispatch::Job, you can make any invocation asynchronous by passing a block:
 
 	@hash.inspect { |s| puts "inspect: #{s} => {64 => 1.0E32, 100 => 1.0E50}" }
@@ -140,7 +140,7 @@ If for any reason you need to retrieve the original (unproxied) object, simply c
 
 	delegate = @hash.__value__
 	puts "\n__value__: #{delegate.class} => Hash"
-	
+
 This differs from +SimpleDelegate#__getobj__+ (which Dispatch::Proxy inherits) in that it will first wait until any pending asynchronous blocks have executed.
 
 As elsewhere in Ruby, the "__" namespace implies "internal" methods, in this case meaning they are called directly on the proxy rather than passed to the delegate.
@@ -154,7 +154,7 @@ Note that we can as usual _access_ local variables from inside the block; GCD au
 	n = 42
 	job = Dispatch::Job.new { puts "n (during): #{n} => 42" }
 	job.join
-	
+
 but this doesn't:
 
 	n = 0
@@ -181,12 +181,12 @@ The simplest iteration is defined on the +Integer+ class, and passes the index t
 
 	5.times { |i| print "#{10**i}\t" }
 	puts "times"
-	
+
 becomes
 
 	5.p_times { |i| print "#{10**i}\t" }
 	puts "p_times"
-	
+
 Note that even though the iterator as a whole is synchronous, and blocks are scheduled in the order received, each block runs independently and therefore may complete out of order.
 
 This does add some overhead compared to the non-parallel version, so if you have a large number of relatively cheap iterations you can batch them together by specifying a +stride+:
@@ -231,7 +231,7 @@ Passes each object and collects the transformed values, like +map+:
 
 	print (0..4).map { |i| "#{10**i}\t" }.join
 	puts "map"
-	
+
 	print (0..4).p_map { |i| "#{10**i}\t" }.join
 	puts "p_map"
 
@@ -249,7 +249,7 @@ This uses a parallel +inject+ (formerly known as +reduce+) to return a single va
 
 	mr = (0..4).p_mapreduce([], :concat) { |i| [10**i] }
 	puts "p_mapreduce(:concat): #{mr} => [1, 1000, 10, 100, 10000]"
-	
+
 Because of those parameters, the optional +stride+ is now the third:
 
 	mr = (0..4).p_mapreduce([], :concat, 3) { |i| [10**i] }
@@ -263,7 +263,7 @@ Passes each object and collects those for which the block is true, like +find_al
 	puts (0..4).find_all { |i| i.odd? }.inspect
 	puts (0..4).p_find_all { |i| i.odd? }.inspect
 	puts (0..4).p_find_all(3) { |i| i.odd? }.inspect
-	
+
 === Enumerable#p_find
 
 Passes each object and returns nil if none match. Similar to +find+, it returns the first object it _finds_ for which the block is true, but unlike +find+ that may not be the _actual_ first object since blocks -- say it with me -- "may complete out of order":
@@ -294,13 +294,13 @@ The simplest way to create a +new+ queue is by passing it a meaningful name, typ
 You can schedule blocks directly on a queue synchronously using +sync+:
 
 	q.sync { puts "queue sync" }
-	
+
 === Queue#async
 
 However, it is usually more useful to schedule them asynchronously using +async+:
 
 	q.async { puts "queue async" }
-		
+
 === Queue#join
 
 A key advantage of scheduling blocks on your own private queue is that you can ensure that all pending blocks have been executed, via a +join+:
@@ -329,7 +329,7 @@ Next, schedule an asynchronous block that will +signal+ when it is done:
 		puts "semaphore signal"
 		semaphore.signal
 	}
-	
+
 === Semaphore#wait
 
 Finally, +wait+ for that signal to arrive
@@ -337,7 +337,7 @@ Finally, +wait+ for that signal to arrive
 	puts "semaphore wait"
 	semaphore.wait
 
-	
+
 == Sources: Asynchronous Events
 
 In addition to scheduling blocks directly, GCD makes it easy to run a block in response to various system events via a Dispatch::Source, which can be a:
@@ -347,7 +347,7 @@ In addition to scheduling blocks directly, GCD makes it easy to run a block in r
 * Signal
 * File descriptor (file or socket)
 * Process state change
-	
+
 When the source "fires", GCD will schedule the _handler_ block on the specific queue if it is not currently running, or -- more importantly -- coalesce pending events if it is. This provides excellent responsiveness without the expense of either polling or binding a thread to the event source.  Plus, since the handler is never run more than once at a time, the block doesn't even need to be reentrant -- and thus you don't need to +synchronize+ any variables that are only used there.
 
 === Source.periodic
@@ -359,7 +359,7 @@ We'll start with a simple example: a +periodic+ timer that runs every 0.4 second
 	 	puts "Dispatch::Source.periodic: #{src.data}"
 	end
 	sleep 1 # => 1 1 ...
-	
+
 If you're familiar with the C API for GCD, be aware that a +Dispatch::Source+ is fully configured at the time of instantiation, and does not need to be +resume+d. Also, times are in seconds, not nanoseconds.
 
 === Source#data
@@ -457,7 +457,7 @@ Similarly, the +or+ source combines events using a logical OR (e.g, for booleans
 	puts "mask: #{@mask.to_s(2)} => 1011"
 	masker.cancel!
 	puts
-	
+
 This is primarily useful for flagging what _kinds_ of events have taken place since the last time the handler fired.
 
 === Process Sources
@@ -484,11 +484,11 @@ The underlying API expects and returns integers, e.g.:
 		puts "Dispatch::Source.process: #{s.data.to_s(2)} (#{@event.to_s(2)})"
 		semaphore.signal
 	end
-	
+
 In this case, we are watching the current process ('$$') for +:signal+ and (less usefully :-) +:exit+ events .
 
 ==== Source#data2events
-	
+
 Alternatively, you can pass in array of names (symbols or strings) for the mask, and optionally use +data2events+ to convert the returned data into an array of symbols
 
 	semaphore2 = Dispatch::Semaphore.new(0)
@@ -600,7 +600,7 @@ As before, the underlying API expects and returns integers, e.g.:
 	puts " (Dispatch::Source::VNODE_DELETE | Dispatch::Source::VNODE_WRITE)"
 	file_src.cancel!
 	q.join
-	
+
 And of course can also use symbols:
 
 	@fevent2 = []
@@ -616,7 +616,7 @@ And of course can also use symbols:
 	semaphore2.wait(0.1)
 	puts "fevent2: #{@fevent2} => [:write]"
 	file_src2.cancel!
-	
+
 As a bonus, if you pass in an actual IO object (not just a file descriptor) the Dispatch library will automatically create a handler that closes the file for you when cancelled!
 
 ==== Source.read
@@ -647,7 +647,7 @@ This +add+-style event is similar to the above, but waits until a +write+ buffer
 		if @next_char < @msg.size then
 			char = @msg[@next_char]
 			file.write(char)
-			@next_char += 1	
+			@next_char += 1
 			puts "Dispatch::Source.write: #{char}|#{@msg[@next_char..-1]}"
 		end
 	end
@@ -659,14 +659,14 @@ In this case we play it safe by only writing out a single character each time we
 
 = What's Next?
 
-This concludes our introduction to the high-level wrappers available when using +require 'dispatch'+.  These allow you to easily write concurrent, asynchronous code using simple Ruby idioms. For additional performance and fine-grained control, you may want to dive down into directly using Queues, Groups, and Semaphores. 
+This concludes our introduction to the high-level wrappers available when using +require 'dispatch'+.  These allow you to easily write concurrent, asynchronous code using simple Ruby idioms. For additional performance and fine-grained control, you may want to dive down into directly using Queues, Groups, and Semaphores.
 At the moment, this is best done by reading the {existing C documentation for GCD}[http://developer.apple.com/mac/articles/cocoa/introblocksgcd.html] and comparing to the relevant RubyDoc.
 
 	$ macri Dispatch
 	$ macri Dispatch::Queue
 	$ macri Dispatch::Group
 	$ macri Dispatch::Semaphore
-		
+
 However, feel free to {file bugs}[https://www.macruby.org/auth/login/?next=/trac/newticket] about additional documentation you would like to see.
 
 = Development

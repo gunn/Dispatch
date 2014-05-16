@@ -16,7 +16,7 @@ class Future
     # Asynchronously dispatch the future to the thread-local queue.
     Thread.current[:futures].async(@group) { @value = block[] }
   end
-  
+
   def value
     # Wait fo the computation to finish. If it has already finished, then
     # just return the value in question.
@@ -30,5 +30,5 @@ f = Future.new do
   sleep 2.5
   'some value'
 end
- 
+
 p f.value

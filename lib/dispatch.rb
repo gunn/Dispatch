@@ -1,8 +1,8 @@
-# 
+#
 # dispatch.rb - Grand Central Dispatch support library
-# 
+#
 # Copyright (C) 2010  Apple, Inc.
-# 
+#
 # == Overview ==
 #
 # Grand Central Dispatch (GCD) is a novel approach to multicore computing

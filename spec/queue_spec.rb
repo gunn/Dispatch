@@ -1,7 +1,7 @@
 require File.expand_path('../spec_helper', __FILE__)
 
 if MACOSX_VERSION >= 10.6
-  
+
   describe "Dispatch::Queue" do
     before :each do
       @my_object = "Hello, World!"
